@@ -1,8 +1,22 @@
-const express = require("express");
-const router = require("./routers/router.js");
+const express = require("express")
+const router = require("./routers/router.js")
+const db = require("./database/connection.js")
 
-const app = express();
+const app = express()
 
-app.use(router);
+app.use(express.json())
+app.use(router)
 
-app.listen(3000);
+const start = async () => {
+    try {
+        await db.authenticate()
+        await db.sync({ alter: true })
+
+        app.listen(3000, () => console.log("Server has been started"))
+    } 
+    catch(e) {
+        console.log(e)
+    }
+}
+
+start()
